@@ -30,10 +30,6 @@ const QueryName = styled.div`
   margin-bottom: 5px;
 `;
 
-const QueryId = styled.div`
-  color: #555;
-`;
-
 function RecentWindow({
   selectedDate,
   selectedWindow,
@@ -60,7 +56,7 @@ function RecentWindow({
         <h2>Recent Queries</h2>
       </Header>
       <QueryList>
-        {recentQuery?.queries.length 
+        {recentQuery?.queries.length
           ? recentQuery.queries.map(({ query, result }, index) => (
               <QueryListItem
                 key={index}
@@ -71,8 +67,9 @@ function RecentWindow({
                 }}
                 active={selectedQuery === query && queryKey === index}
               >
-                <QueryName>Query: {query}</QueryName>
-                <QueryId>Id: {index + 1}</QueryId>
+                <QueryName>
+                  {index + 1} : {query}{" "}
+                </QueryName>
               </QueryListItem>
             ))
           : "No Queries"}

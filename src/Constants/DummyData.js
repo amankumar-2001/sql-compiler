@@ -168,10 +168,10 @@ export const dummyData = [
     date: "2023-09-15",
     windowPages: [
       {
-        page: "window_2",
+        page: "window_1",
         queries: [
           {
-            query: "select * from table2",
+            query: "select * from rabitm12345",
             result: [
               {
                 Name: "Alice",
@@ -205,13 +205,13 @@ export const dummyData = [
     date: "2023-09-14",
     windowPages: [
       {
-        page: "window_3",
+        page: "window_1",
         queries: [
           {
-            query: "select * from table3",
+            query: "select * from target456",
             result: [
               {
-                Name: "Emma",
+                Name: "Ramika",
                 Id: "7890",
                 Marks: "78",
                 Marks2: "78",
@@ -222,7 +222,7 @@ export const dummyData = [
                 Marks7: "78",
               },
               {
-                Name: "Grace",
+                Name: "Gapu",
                 Id: "7891",
                 Marks: "92",
                 Marks2: "92",
@@ -242,10 +242,10 @@ export const dummyData = [
     date: "2023-09-13",
     windowPages: [
       {
-        page: "window_4",
+        page: "window_1",
         queries: [
           {
-            query: "select * from table4",
+            query: "select * from yatri12",
             result: [
               {
                 Name: "David",
@@ -279,10 +279,10 @@ export const dummyData = [
     date: "2023-09-12",
     windowPages: [
       {
-        page: "window_5",
+        page: "window_1",
         queries: [
           {
-            query: "select * from table5",
+            query: "select * from followTable",
             result: [
               {
                 Name: "Olivia",

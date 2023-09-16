@@ -33,6 +33,9 @@ function Dashboard({ query, addNewWindow }) {
       windowName: `window_${size + 1}`,
       size,
     });
+
+    setSelectedWindow(`window_${size + 1}`);
+    setSelectedDate(currentDate);
   };
 
   return (

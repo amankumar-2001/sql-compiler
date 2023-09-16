@@ -44,7 +44,15 @@ const ResultContainer = styled.div`
   text-align: left;
   display: grid;
   grid-template-rows: 0.6fr 6fr;
+
+  position: ${({ view }) => (view ? "absolute" : "")};
+  top: ${({ view }) => (view ? "0px" : "")};
+  right: ${({ view }) => (view ? "0px" : "")};
+  width: ${({ view }) => (view ? "85%" : "")};
+  height: ${({ view }) => (view ? "100%" : "")};
+  background: ${({ view }) => (view ? "grey" : "none")};
 `;
+
 const InputWindow = styled.div`
   display: grid;
   grid-template-rows: 1fr 5fr;
@@ -58,7 +66,7 @@ const Actions = styled.div`
 
 const Output = styled.div`
   background: black;
-  height: 380px;
+  height: ${({ view }) => (view ? "877px" : "380px")};
   overflow: scroll;
   color: white;
   padding: 10px;
@@ -111,6 +119,9 @@ const Total = styled.div`
   margin-bottom: 10px;
 `;
 
+const ViewButton = styled(ClearButton)`
+  margin-right: 10px;
+`;
 function Compiler({
   selectedQuery,
   queryOutput,
@@ -127,6 +138,7 @@ function Compiler({
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState("");
   const [index, setIndex] = useState(0);
+  const [view, setView] = useState(false);
 
   const runQuery = ({ queryWindow, queryDate }) => {
     if (queryDate === CurrentDateFormat()) {
@@ -146,7 +158,7 @@ function Compiler({
       }
 
       setIndex(Math.floor(Math.random() * (data.length - 5)));
-      const len = Math.floor(Math.random() * 10);
+      const len = Math.floor(Math.random() * 20);
       const resetData = data.filter((obj, i) => {
         return i >= index && i <= index + len;
       });
@@ -156,8 +168,6 @@ function Compiler({
         query,
         result: resetData,
       };
-      console.log(saveToStore);
-      
       addQuery({
         newQuery: saveToStore,
         date: queryDate,
@@ -182,12 +192,18 @@ function Compiler({
           if (!dateObject.windowPages.length) {
             createNewWindow();
           }
+          setSelectedWindow(dateObject.windowPages[0].page);
+          runQuery({
+            queryDate: CurrentDateFormat(),
+            queryWindow: dateObject.windowPages[0].page,
+          });
+        } else {
+          createNewWindow();
+          runQuery({
+            queryDate: CurrentDateFormat(),
+            queryWindow: `window_1`,
+          });
         }
-        setSelectedWindow(dateObject.windowPages[0].page);
-        runQuery({
-          queryDate: CurrentDateFormat(),
-          queryWindow: dateObject.windowPages[0].page,
-        });
       }
     } else {
       alert("Oops!! No query found, Please Enter Query");
@@ -203,6 +219,11 @@ function Compiler({
     setQuery(selectedQuery);
     setResult(queryOutput);
   }, [selectedQuery, queryOutput]);
+
+  //   useEffect(() => {
+  //     setQuery("");
+  //     setResult("");
+  //   }, [selectedDate, selectedWindow]);
 
   useEffect(() => {
     if (result && searchQuery) {
@@ -235,10 +256,13 @@ function Compiler({
           onChange={(e) => setQuery(e.target.value)}
         />
       </InputWindow>
-      <ResultContainer>
+      <ResultContainer view={view}>
         <Header>
           <h3>Result:</h3>
           <SearchContainer>
+            <ViewButton onClick={() => (view ? setView(false) : setView(true))}>
+              View in {view ? "small" : "large"} Window
+            </ViewButton>
             <SearchInput
               type="text"
               placeholder="Search in result..."
@@ -247,7 +271,7 @@ function Compiler({
             />
           </SearchContainer>
         </Header>
-        <Output>
+        <Output view={view}>
           <TableWrapper>
             {result.length ? (
               <>
@@ -255,6 +279,7 @@ function Compiler({
                 <Table>
                   <TableHead>
                     <TableRow background={"grey"}>
+                      <TableCell>Serial No.</TableCell>
                       {Object.keys(result[0]).map((item, index) => (
                         <TableCell key={index}>{item}</TableCell>
                       ))}
@@ -269,6 +294,7 @@ function Compiler({
                             searchResult.includes(row) ? "darkblue" : "node"
                           }
                         >
+                          <TableCell>{i + 1}</TableCell>
                           {Object.keys(result[0]).map((item, j) => (
                             <TableCell key={j}>{row[item]}</TableCell>
                           ))}

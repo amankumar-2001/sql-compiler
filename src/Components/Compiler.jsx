@@ -310,8 +310,10 @@ function Compiler({
           </TableWrapper>
         </Output>
       </ResultContainer>
-      {alertView.length && (
+      {alertView.length ? (
         <Alert message={alertView} onClose={() => setAlertView([])} />
+      ) : (
+        <></>
       )}
     </CompilerContainer>
   );

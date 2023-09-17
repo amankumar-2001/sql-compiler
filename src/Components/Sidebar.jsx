@@ -5,10 +5,7 @@ import { connect } from "react-redux";
 import querySlice from "../Store/Slices/querySlice";
 import { BsFiletypeSql } from "react-icons/bs";
 import { MdOutlineAddBox } from "react-icons/md";
-import {
-  CurrentDateFormat,
-  dateFormatToDayMonthYear,
-} from "../Constants/CommonFunctions";
+import { dateFormatToDayMonthYear } from "../Constants/CommonFunctions";
 
 const SidebarContainer = styled.div`
   height: 100%;
@@ -58,6 +55,10 @@ const SidebarHeader = styled.div`
   border: 1px solid;
   cursor: pointer;
   height: 30px;
+
+  &:hover {
+    background-color: #555;
+  }
 `;
 
 const Title = styled.div``;
@@ -94,23 +95,21 @@ function Sidebar({
                   <DateHeader>{dateFormatToDayMonthYear(date)} :</DateHeader>
                   {windowPages.map(({ page }, index) => {
                     return (
-                      
-                        <WindowTiles
-                          active={
-                            selectedWindow === page && selectedDate === date
-                          }
-                          onClick={() => {
-                            setSelectedWindow(page);
-                            setSelectedDate(date);
-                          }}
-                          key={index}
-                        >
-                          <BsFiletypeSql
-                            style={{ margin: "2px", "padding-right": "10px" }}
-                          />
-                          {page}
-                        </WindowTiles>
-                      
+                      <WindowTiles
+                        active={
+                          selectedWindow === page && selectedDate === date
+                        }
+                        onClick={() => {
+                          setSelectedWindow(page);
+                          setSelectedDate(date);
+                        }}
+                        key={index}
+                      >
+                        <BsFiletypeSql
+                          style={{ margin: "2px", "padding-right": "10px" }}
+                        />
+                        {page}
+                      </WindowTiles>
                     );
                   })}
                 </>

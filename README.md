@@ -6,41 +6,46 @@
 - Techs Involved - ReactJS | Redux | Git | HTML
 - React Library include:  reduxjs/toolkit | react-redux | react-icons | styled-components
 
-### Detailed Desi
+### Detailed Design
 
 - Built the app using react functional components with hooks to handle state and other life cycle methods
 - Kept the layout of the application simple to have any modification or enhancement in the future to evolve the layout as required
 - The application has only one screen i.e. Dashboard
 - ### Dashboard
-This is the home page i.e. first page.
-![alt text](./public/Screenshots/Screenshot 2023-09-17 at 10.53.52 AM.png)
+![alt text](./public/Screenshots/Screenshot1.png)
+- This is the dashboard which contains three main components i.e. Sidebar, Queries, and Compiler.
+- Sidebar contains the day-wise windows (windows are something where a user can execute separate queries on the same day).
+- Queries contain all the queries executed in the selected window.
+- Compiler mainly contains two parts: 1) Input textarea and 2) Result output
+  
+![alt text](./public/Screenshots/Screenshot2.png) 
+![alt text](./public/Screenshots/Screenshot3.png) 
+- The user can only execute the query in the windows of today's date.
+- The user can select the query from the Queries to view the corresponding table of data.
+- The queries executed by the user are stored in a redux store hence after reloading the page it will erase all the recent queries except those that are stored in a separate file.
 
-![alt text](./images/Home-register.png)
+![alt text](./public/Screenshots/Screenshot4.png) 
+- User can view the result/output table in large size view by clicking on the button "View in large Window".
 
-### Dashboard
-![alt text](./images/Dashboard.png)
-- This is the dashboard.
+![alt text](./public/Screenshots/Screenshot5.png) 
+- Output result has the functionality of searching in the output table.
 
-### Detail data
-![alt text](./images/detail-data.png)
-- Every element's detailed information.
-
-### Create Modal
-![alt text](./images/create-model.png)
-- This is create modal.
+![alt text](./public/Screenshots/Screenshot6.png) 
+- Users can create multiple windows in today's session and execute queries in separate windows.
 
 ## How to Run the Application:
 
 Clone the repo and set up the application
 
-- git clone [https://github.com/amankumar-2001/deep-into-crud](https://github.com/amankumar-2001/client-DIC.git)
-- cd client-DIC
+- git clone [https://github.com/amankumar-2001/sql-compiler](https://github.com/amankumar-2001/sql-compiler.git)
+- cd sql-compiler
 - npm install
 - npm start
 
 ## Application Link
 
-- Application link deployed on Vercel: https://client-dic.vercel.app/users/login
+- Application link deployed on Vercel: [https://client-dic.vercel.app/users/login](https://sql-compiler-zeta.vercel.app/)
+  
 ## Author
 
 - [@amankumar-2001](https://www.github.com/amankumar-2001)

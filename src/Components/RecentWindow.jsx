@@ -53,7 +53,7 @@ function RecentWindow({
   return (
     <QueryListContainer>
       <Header>
-        <h2>Recent Queries</h2>
+        <h2>Queries</h2>
       </Header>
       <QueryList>
         {recentQuery?.queries.length

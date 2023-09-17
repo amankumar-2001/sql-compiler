@@ -30,11 +30,11 @@ function Dashboard({ query, addNewWindow }) {
     });
     addNewWindow({
       date: currentDate,
-      windowName: `window_${size + 1}`,
+      windowName: `Window ${size + 1}`,
       size,
     });
 
-    setSelectedWindow(`window_${size + 1}`);
+    setSelectedWindow(`Window ${size + 1}`);
     setSelectedDate(currentDate);
   };
 

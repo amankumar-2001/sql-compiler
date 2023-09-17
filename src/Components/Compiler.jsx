@@ -4,6 +4,7 @@ import { Response } from "../Constants/DummyData";
 import { connect } from "react-redux";
 import querySlice from "../Store/Slices/querySlice";
 import { CurrentDateFormat } from "../Constants/CommonFunctions";
+import Alert from "./Alert";
 
 const CompilerContainer = styled.div`
   display: grid;
@@ -139,6 +140,7 @@ function Compiler({
   const [searchResult, setSearchResult] = useState("");
   const [index, setIndex] = useState(0);
   const [view, setView] = useState(false);
+  const [alertView, setAlertView] = useState([]);
 
   const runQuery = ({ queryWindow, queryDate }) => {
     if (queryDate === CurrentDateFormat()) {
@@ -174,7 +176,10 @@ function Compiler({
         windowPage: queryWindow,
       });
     } else {
-      alert("Query can not be performed in past days");
+      setAlertView([
+        "The query cannot be executed in the previous day window.",
+        "Select window from today's session or create a new window in today's session to execute new query.",
+      ]);
     }
   };
 
@@ -201,12 +206,12 @@ function Compiler({
           createNewWindow();
           runQuery({
             queryDate: CurrentDateFormat(),
-            queryWindow: `window_1`,
+            queryWindow: `Window 1`,
           });
         }
       }
     } else {
-      alert("Oops!! No query found, Please Enter Query");
+      setAlertView(["Oops!! No query found, Please Enter Query"]);
     }
   };
 
@@ -219,11 +224,6 @@ function Compiler({
     setQuery(selectedQuery);
     setResult(queryOutput);
   }, [selectedQuery, queryOutput]);
-
-  //   useEffect(() => {
-  //     setQuery("");
-  //     setResult("");
-  //   }, [selectedDate, selectedWindow]);
 
   useEffect(() => {
     if (result && searchQuery) {
@@ -310,6 +310,9 @@ function Compiler({
           </TableWrapper>
         </Output>
       </ResultContainer>
+      {alertView.length && (
+        <Alert message={alertView} onClose={() => setAlertView([])} />
+      )}
     </CompilerContainer>
   );
 }

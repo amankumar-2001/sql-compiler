@@ -3,7 +3,7 @@ export const dummyData = [
     date: "2023-09-16",
     windowPages: [
       {
-        page: "window_2",
+        page: "Window 2",
         queries: [
           {
             query: "select * from tgyibgtyn",
@@ -131,7 +131,7 @@ export const dummyData = [
         ],
       },
       {
-        page: "window_1",
+        page: "Window 1",
         queries: [
           {
             query: "select * fabjhtg",
@@ -168,7 +168,7 @@ export const dummyData = [
     date: "2023-09-15",
     windowPages: [
       {
-        page: "window_1",
+        page: "Window 1",
         queries: [
           {
             query: "select * from rabitm12345",
@@ -205,7 +205,7 @@ export const dummyData = [
     date: "2023-09-14",
     windowPages: [
       {
-        page: "window_1",
+        page: "Window 1",
         queries: [
           {
             query: "select * from target456",
@@ -242,7 +242,7 @@ export const dummyData = [
     date: "2023-09-13",
     windowPages: [
       {
-        page: "window_1",
+        page: "Window 1",
         queries: [
           {
             query: "select * from yatri12",
@@ -279,7 +279,7 @@ export const dummyData = [
     date: "2023-09-12",
     windowPages: [
       {
-        page: "window_1",
+        page: "Window 1",
         queries: [
           {
             query: "select * from followTable",

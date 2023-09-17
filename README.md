@@ -5,7 +5,9 @@
 - The app is not responsive in portrait mode and is suggested to view in landscape mode/ on a desktop.
 - Techs Involved - ReactJS | Redux | Git | HTML
 - React Library include:  reduxjs/toolkit | react-redux | react-icons | styled-components
-
+- The total time taken to load the application is 300ms and it is measured by the Browser Developer Tools of Chrome (The network tab displays the time it takes to load each resource like HTML, CSS, JavaScript, images, etc., and the overall page load time).
+- I have used code splitting to optimize the load time of the application.
+  
 ### Detailed Design
 
 - Built the app using react functional components with hooks to handle state and other life cycle methods

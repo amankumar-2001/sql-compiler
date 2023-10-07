@@ -13,6 +13,12 @@
 - Built the app using react functional components with hooks to handle state and other life cycle methods
 - Kept the layout of the application simple to have any modification or enhancement in the future to evolve the layout as required
 - The application has only one screen i.e. Dashboard
+
+### Changes in version 2.0
+
+- Added a advanced functionality on the tables like: joins and pivot.
+- In the recent window top-right has a advanced operation dropdown, where you can select the operation you want to perform.
+
 - ### Dashboard
 ![alt text](./public/Screenshots/Screenshot1.png)
 - This is the dashboard which contains three main components i.e. Sidebar, Queries, and Compiler.

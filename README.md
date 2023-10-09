@@ -18,6 +18,7 @@
 
 - Added a advanced functionality on the tables like: joins and pivot.
 - In the recent window top-right has a advanced operation dropdown, where you can select the operation you want to perform.
+- I have added a dropdown on recent window that shows some advance operations on tables like joins and pivot. 
 
 - ### Dashboard
 ![alt text](./public/Screenshots/Screenshot1.png)

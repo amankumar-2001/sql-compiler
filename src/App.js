@@ -1,8 +1,9 @@
 import { styled } from "styled-components";
 import Dashboard from "./Screens/Dashboard";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const Container = styled.div`
-  font-family: "Roboto", sans-serif;
+  height: 100vh;
 `;
 
 function App() {

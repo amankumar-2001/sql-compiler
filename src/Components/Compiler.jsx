@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Response } from "../Constants/DummyData";
 import { connect } from "react-redux";
 import querySlice from "../Store/Slices/querySlice";
 import { CurrentDateFormat } from "../Constants/CommonFunctions";
-import Alert from "./Alert";
+import axios from "axios";
+import { apiUrls } from "../Constants/Apidist";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Alert from "react-bootstrap/Alert";
+
+const csvtojson = require("csvtojson");
 
 const CompilerContainer = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr;
   margin-right: 13px;
+  height: 100%;
+  padding: 10px;
 `;
 
 const TextArea = styled.textarea`
@@ -19,16 +26,6 @@ const TextArea = styled.textarea`
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
-`;
-
-const CompileButton = styled.button`
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 35px;
 `;
 
 const ClearButton = styled.button`
@@ -56,7 +53,7 @@ const ResultContainer = styled.div`
 
 const InputWindow = styled.div`
   display: grid;
-  grid-template-rows: 1fr 5fr;
+  grid-template-rows: 1fr 6fr;
 `;
 const Actions = styled.div`
   display: flex;
@@ -71,7 +68,7 @@ const Output = styled.div`
   overflow: scroll;
   color: white;
   padding: 10px;
-  margin: 0px 0px 13px 0px;
+  margin: 13px 0px 13px 0px;
 `;
 
 const TableWrapper = styled.div`
@@ -103,16 +100,19 @@ const TableCell = styled.td`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 12px;
 `;
 
 const SearchInput = styled.input`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  height: 38px;
 `;
 
 const Header = styled.div`
   display: flex;
+  height: 50px;
   justify-content: space-between;
 `;
 
@@ -120,9 +120,6 @@ const Total = styled.div`
   margin-bottom: 10px;
 `;
 
-const ViewButton = styled(ClearButton)`
-  margin-right: 10px;
-`;
 function Compiler({
   selectedQuery,
   queryOutput,
@@ -138,48 +135,46 @@ function Compiler({
   const [result, setResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState("");
-  const [index, setIndex] = useState(0);
   const [view, setView] = useState(false);
   const [alertView, setAlertView] = useState([]);
+  const [status, setStatus] = useState({});
 
-  const runQuery = ({ queryWindow, queryDate }) => {
+  const runQuery = async ({ queryWindow, queryDate }) => {
     if (queryDate === CurrentDateFormat()) {
-      const rows = Response.trim().split("\n");
-      const headerRow = rows[0].split(",");
-      const columnNames = headerRow.map((columnName) => columnName.trim());
+      try {
+        const apiKeys = Object.keys(apiUrls);
+        const randomKey = apiKeys[Math.floor(Math.random() * apiKeys.length)];
 
-      const data = [];
+        const response = await axios.get(apiUrls[randomKey]);
+        const csvData = response.data;
+        const jsonArray = await csvtojson().fromString(csvData);
 
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i].split(",");
-        const rowData = {};
-        for (let j = 0; j < columnNames.length; j++) {
-          rowData[columnNames[j]] = row[j];
-        }
-        data.push(rowData);
+        setResult(jsonArray);
+        const saveToStore = {
+          query,
+          result: jsonArray,
+        };
+        addQuery({
+          newQuery: saveToStore,
+          date: queryDate,
+          windowPage: queryWindow,
+        });
+        setStatus({
+          value: "success",
+          label: "Successfully Compiled",
+        });
+      } catch (err) {
+        setStatus({
+          value: "danger",
+          label: err,
+        });
       }
-
-      setIndex(Math.floor(Math.random() * (data.length - 5)));
-      const len = Math.floor(Math.random() * 20);
-      const resetData = data.filter((obj, i) => {
-        return i >= index && i <= index + len;
-      });
-
-      setResult(resetData);
-      const saveToStore = {
-        query,
-        result: resetData,
-      };
-      addQuery({
-        newQuery: saveToStore,
-        date: queryDate,
-        windowPage: queryWindow,
-      });
     } else {
-      setAlertView([
-        "The query cannot be executed in the previous day window.",
-        "Select window from today's session or create a new window in today's session to execute new query.",
-      ]);
+      setStatus({
+        value: "danger",
+        label:
+          "The query cannot be executed in the previous day window. Select window from today's session or create a new window in today's session to execute new query.",
+      });
     }
   };
 
@@ -211,14 +206,22 @@ function Compiler({
         }
       }
     } else {
-      setAlertView(["Oops!! No query found, Please Enter Query"]);
+      setStatus({
+        value: "danger",
+        label: "Oops!! No query found, Please Enter Query",
+      });
     }
   };
 
   const clearQuery = () => {
     setQuery("");
     setResult([]);
+    setStatus({});
   };
+
+  useEffect(() => {
+    setStatus({});
+  }, [query]);
 
   useEffect(() => {
     setQuery(selectedQuery);
@@ -246,8 +249,12 @@ function Compiler({
         <Header>
           <h2>SQL Compiler</h2>
           <Actions>
-            <CompileButton onClick={compileQuery}>Compile</CompileButton>
-            <ClearButton onClick={clearQuery}>Clear</ClearButton>
+            <Button variant="dark" onClick={compileQuery}>
+              Compile
+            </Button>
+            <Button variant="dark" onClick={clearQuery}>
+              Clear
+            </Button>
           </Actions>
         </Header>
         <TextArea
@@ -255,14 +262,23 @@ function Compiler({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+
+        {status.value && (
+          <Alert key={status.value} variant={status.value}>
+            {status.label}
+          </Alert>
+        )}
       </InputWindow>
       <ResultContainer view={view}>
         <Header>
           <h3>Result:</h3>
           <SearchContainer>
-            <ViewButton onClick={() => (view ? setView(false) : setView(true))}>
+            <Button
+              variant="dark"
+              onClick={() => (view ? setView(false) : setView(true))}
+            >
               View in {view ? "small" : "large"} Window
-            </ViewButton>
+            </Button>
             <SearchInput
               type="text"
               placeholder="Search in result..."
@@ -310,11 +326,25 @@ function Compiler({
           </TableWrapper>
         </Output>
       </ResultContainer>
-      {alertView.length ? (
-        <Alert message={alertView} onClose={() => setAlertView([])} />
-      ) : (
-        <></>
-      )}
+
+      <Modal
+        show={alertView.length > 0}
+        onHide={() => setAlertView([])}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Alert</Modal.Title>
+        </Modal.Header>
+        {alertView.map((str) => {
+          return <Modal.Body>{str} </Modal.Body>;
+        })}
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setAlertView([])}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </CompilerContainer>
   );
 }

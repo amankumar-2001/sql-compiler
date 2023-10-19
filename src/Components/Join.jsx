@@ -3,15 +3,19 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { styled } from "styled-components";
 import { connect } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 
 const OperationContainer = styled.div`
-  height: 97vh;
+  height: 100vh;
   overflow: scroll;
+  margin: 12px;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: 12px 0px;
 `;
 
 const Heading = styled.h2`
@@ -77,7 +81,10 @@ const OperationWindow = styled.div`
   display: grid;
   grid-template-rows: 2fr 5fr;
   height: 92%;
+  border: 2px solid;
+  border-radius: 4px;
 `;
+
 const InputWindow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -86,18 +93,15 @@ const LeftTable = styled.div`
   padding: 0px 5%;
   width: 90%;
   height: 100%;
-  border: 2px solid black;
 `;
 const RightTable = styled.div`
   padding: 0px 5%;
   width: 90%;
   height: 100%;
-  border: 2px solid black;
 `;
 const OutputWindow = styled.div`
   width: 100%;
   height: 100%;
-  border: 2px solid black;
   text-align: left;
   display: grid;
   grid-template-rows: 0.6fr 6fr;
@@ -121,17 +125,7 @@ const QueryName = styled.div`
   font-weight: 500;
   margin-bottom: 5px;
 `;
-const CompileButton = styled.button`
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 35px;
-`;
 
-const ClearButton = styled(CompileButton)``;
 const ColumnList = styled.div`
   display: flex;
   flex-direction: column;
@@ -141,7 +135,7 @@ const ColumnList = styled.div`
 
 const Output = styled.div`
   background: black;
-  height: 490px;
+  height: 500px;
   overflow: scroll;
   color: white;
   padding: 10px;
@@ -223,6 +217,7 @@ function Join({
   const [basedOn, setBasedOn] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState("");
+  const [status, setStatus] = useState({});
 
   const toggleDropdown = () => {
     const menu = document.getElementById("operationDropdownMenu");
@@ -230,46 +225,67 @@ function Join({
   };
 
   const naturalJoin = () => {
-    const commonKeys = Object.keys(leftSelectedTable.result[0]).filter((key) =>
-      Object.keys(rightSelectedTable.result[0]).includes(key)
-    );
-    const joinResult = leftSelectedTable.result.map((leftItem) => {
-      const matchingRightItem = rightSelectedTable.result.find((rightItem) =>
-        commonKeys.every((key) => leftItem[key] === rightItem[key])
+    if (leftSelectedTable?.query && rightSelectedTable?.query) {
+      const commonKeys = Object.keys(leftSelectedTable.result[0]).filter(
+        (key) => Object.keys(rightSelectedTable.result[0]).includes(key)
       );
+      const joinResult = leftSelectedTable.result.map((leftItem) => {
+        const matchingRightItem = rightSelectedTable.result.find((rightItem) =>
+          commonKeys.every((key) => leftItem[key] === rightItem[key])
+        );
 
-      return {
-        ...leftItem,
-        ...(matchingRightItem || {}),
-      };
-    });
-    setFinalOutput(joinResult);
+        return {
+          ...leftItem,
+          ...(matchingRightItem || {}),
+        };
+      });
+      setFinalOutput(joinResult);
+    } else {
+      setStatus({
+        value: "danger",
+        label: "Please select the left table and right table",
+      });
+    }
   };
 
   const leftJoin = ({ on }) => {
-    const joinResult = leftSelectedTable.result.map((leftItem) => {
-      const matchingRightItem = rightSelectedTable.result.find(
-        (rightItem) => rightItem[on] === leftItem[on]
-      );
-      return {
-        ...leftItem,
-        ...(matchingRightItem || {}),
-      };
-    });
-    setFinalOutput(joinResult);
+    if (leftSelectedTable?.query && rightSelectedTable?.query) {
+      const joinResult = leftSelectedTable.result.map((leftItem) => {
+        const matchingRightItem = rightSelectedTable.result.find(
+          (rightItem) => rightItem[on] === leftItem[on]
+        );
+        return {
+          ...leftItem,
+          ...(matchingRightItem || {}),
+        };
+      });
+      setFinalOutput(joinResult);
+    } else {
+      setStatus({
+        value: "danger",
+        label: "Please select the left table and right table",
+      });
+    }
   };
 
   const rightJoin = ({ on }) => {
-    const joinResult = rightSelectedTable.result.map((leftItem) => {
-      const matchingRightItem = leftSelectedTable.result.find(
-        (rightItem) => rightItem[on] === leftItem[on]
-      );
-      return {
-        ...leftItem,
-        ...(matchingRightItem || {}),
-      };
-    });
-    setFinalOutput(joinResult);
+    if (leftSelectedTable?.query && rightSelectedTable?.query) {
+      const joinResult = rightSelectedTable.result.map((leftItem) => {
+        const matchingRightItem = leftSelectedTable.result.find(
+          (rightItem) => rightItem[on] === leftItem[on]
+        );
+        return {
+          ...leftItem,
+          ...(matchingRightItem || {}),
+        };
+      });
+      setFinalOutput(joinResult);
+    } else {
+      setStatus({
+        value: "danger",
+        label: "Please select the left table and right table",
+      });
+    }
   };
 
   useEffect(() => {
@@ -279,6 +295,8 @@ function Join({
         temp.windowPages.find(({ page }) => page === selectedWindow)
       );
     }
+
+    setStatus({});
   }, [query, selectedDate, selectedWindow]);
 
   useEffect(() => {
@@ -308,7 +326,8 @@ function Join({
           {selectedOperation}
         </Heading>
         <Actions>
-          <ClearButton
+          <Button
+            variant="dark"
             onClick={() => {
               setFinalOutput([]);
               setLeftSelectedTable({});
@@ -316,8 +335,9 @@ function Join({
             }}
           >
             Clear
-          </ClearButton>
-          <CompileButton
+          </Button>
+          <Button
+            variant="dark"
             onClick={() => {
               if (selectedOperation === "Natural Join") {
                 naturalJoin(basedOn);
@@ -329,7 +349,7 @@ function Join({
             }}
           >
             Compile
-          </CompileButton>
+          </Button>
           <BtnGroup>
             <DropdownButton onClick={toggleDropdown}>
               Advance Operation
@@ -382,9 +402,15 @@ function Join({
           </BtnGroup>
         </Actions>
       </Header>
+      {status.value && (
+        <Alert key={status.value} variant={status.value}>
+          {status.label}
+        </Alert>
+      )}
       <OperationWindow>
         <InputWindow>
           <LeftTable>
+            <h4>Left Table:</h4>
             <QueryList>
               {recentQuery?.queries.length ? (
                 Object.keys(leftSelectedTable).length === 0 ? (
@@ -440,6 +466,7 @@ function Join({
             </QueryList>
           </LeftTable>
           <RightTable>
+            <h4>Right Table:</h4>
             <QueryList>
               {recentQuery?.queries.length ? (
                 Object.keys(rightSelectedTable).length === 0 ? (
@@ -507,6 +534,7 @@ function Join({
               />
             </SearchContainer>
           </Header>
+
           <Output>
             <TableWrapper>
               {finalOutput.length ? (

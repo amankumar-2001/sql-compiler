@@ -4,15 +4,17 @@ import styled from "styled-components";
 import { RiArrowDownSLine } from "react-icons/ri";
 
 const QueryListContainer = styled.div`
-  height: 97vh;
+  height: 100%;
+  padding: 10px;
   overflow: scroll;
 `;
 
 const QueryListItem = styled.div`
-  border: 1px solid #ccc;
+  border: 1px solid;
   padding: 10px;
   margin-bottom: 10px;
   cursor: pointer;
+  border-radius: 5px;
   background-color: ${({ active }) => (active ? "#555" : "none")};
 
   &:hover {
@@ -25,10 +27,9 @@ const Header = styled.div`
 `;
 const QueryList = styled.div`
   margin-top: 13px;
-`;
-const QueryName = styled.div`
-  font-weight: 500;
-  margin-bottom: 5px;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const BtnGroup = styled.div`
@@ -85,6 +86,7 @@ const Actions = styled.div`
   gap: 10px;
   align-items: center;
 `;
+
 function RecentWindow({
   selectedDate,
   selectedWindow,
@@ -93,7 +95,7 @@ function RecentWindow({
   setSelectedQuery,
   setQueryOutput,
   selectedOperation,
-  setSelectedOperation
+  setSelectedOperation,
 }) {
   const [recentQuery, setRecentQuery] = useState();
   const [queryKey, setQueryKey] = useState();
@@ -182,9 +184,7 @@ function RecentWindow({
                 }}
                 active={selectedQuery === query && queryKey === index}
               >
-                <QueryName>
-                  {index + 1} : {query}{" "}
-                </QueryName>
+                {index + 1} : {query}{" "}
               </QueryListItem>
             ))
           : "No Queries"}

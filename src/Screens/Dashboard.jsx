@@ -11,6 +11,7 @@ import Pivot from "../Components/Pivot";
 
 const Container = styled.div`
   display: grid;
+  height: 100vh;
   grid-template-columns: ${({ selectedOperation }) =>
     selectedOperation ? "1.5fr 8fr" : "1.5fr 3fr 5fr"};
   gap: 10px;

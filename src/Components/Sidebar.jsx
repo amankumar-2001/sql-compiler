@@ -35,7 +35,7 @@ const WindowTiles = styled.div`
   border-radius: 5px;
   align-items: center;
   font-size: 18px;
-  padding: 5px;
+  padding: 20px 5px;
   margin: 5px;
   cursor: pointer;
   height: 30px;
@@ -106,7 +106,11 @@ function Sidebar({
                         key={index}
                       >
                         <BsFiletypeSql
-                          style={{ margin: "2px", "padding-right": "10px" }}
+                          style={{
+                            margin: "2px",
+                            "padding-right": "10px",
+                            width: "30px",
+                          }}
                         />
                         {page}
                       </WindowTiles>

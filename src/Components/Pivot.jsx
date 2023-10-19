@@ -3,10 +3,13 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { styled } from "styled-components";
 import { connect } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 
 const OperationContainer = styled.div`
-  height: 97vh;
+  height: 100vh;
   overflow: scroll;
+  margin: 12px;
 `;
 
 const Header = styled.div`
@@ -125,12 +128,6 @@ const CompileButton = styled.button`
 `;
 
 const ClearButton = styled(CompileButton)``;
-const ColumnList = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 160px;
-  overflow: scroll;
-`;
 
 const Output = styled.div`
   background: black;
@@ -222,6 +219,7 @@ function Pivot({
   const [valueKey, setValueKey] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState("");
+  const [status, setStatus] = useState({});
 
   const toggleDropdown = () => {
     const menu = document.getElementById("operationDropdownMenu");
@@ -229,35 +227,42 @@ function Pivot({
   };
 
   const pivotTable = ({ table, rowKey, columnKey, valueKey }) => {
-    const pivotedData = {};
+    if (table && rowKey && columnKey && valueKey) {
+      const pivotedData = {};
 
-    table.forEach((row) => {
-      const rowKeyValue = row[rowKey];
-      const columnKeyValue = row[columnKey];
-      const cellValue = row[valueKey];
+      table.forEach((row) => {
+        const rowKeyValue = row[rowKey];
+        const columnKeyValue = row[columnKey];
+        const cellValue = row[valueKey];
 
-      if (!pivotedData[rowKeyValue]) {
-        pivotedData[rowKeyValue] = {};
+        if (!pivotedData[rowKeyValue]) {
+          pivotedData[rowKeyValue] = {};
+        }
+
+        pivotedData[rowKeyValue][columnKeyValue] = cellValue;
+      });
+
+      const pivotedArray = [];
+      const ColumnList = [];
+      for (const row in pivotedData) {
+        for (const columnKey in pivotedData[row]) {
+          ColumnList.push(columnKey);
+        }
       }
-
-      pivotedData[rowKeyValue][columnKeyValue] = cellValue;
-    });
-
-    const pivotedArray = [];
-    const ColumnList = [];
-    for (const row in pivotedData) {
-      for (const columnKey in pivotedData[row]) {
-        ColumnList.push(columnKey);
+      for (const row in pivotedData) {
+        const newRow = { [rowKey]: row };
+        for (const columnKey of ColumnList) {
+          newRow[columnKey] = pivotedData[row][columnKey] || "-";
+        }
+        pivotedArray.push(newRow);
       }
+      setFinalOutput(pivotedArray);
+    } else {
+      setStatus({
+        value: "danger",
+        label: "Please select the table, rowKey, columnKey and valueKey",
+      });
     }
-    for (const row in pivotedData) {
-      const newRow = { [rowKey]: row };
-      for (const columnKey of ColumnList) {
-        newRow[columnKey] = pivotedData[row][columnKey] || "-";
-      }
-      pivotedArray.push(newRow);
-    }
-    setFinalOutput(pivotedArray);
   };
 
   useEffect(() => {
@@ -268,6 +273,10 @@ function Pivot({
       );
     }
   }, [query, selectedDate, selectedWindow]);
+
+  useEffect(() => {
+    setStatus({});
+  }, [columnKey, valueKey, rowKey, query, selectedDate, selectedWindow]);
 
   useEffect(() => {
     if (finalOutput && searchQuery) {
@@ -296,7 +305,8 @@ function Pivot({
           {selectedOperation}
         </Heading>
         <Actions>
-          <ClearButton
+          <Button
+            variant="dark"
             onClick={() => {
               setFinalOutput([]);
               setSelectedTable({});
@@ -306,8 +316,9 @@ function Pivot({
             }}
           >
             Clear
-          </ClearButton>
-          <CompileButton
+          </Button>
+          <Button
+            variant="dark"
             onClick={() => {
               pivotTable({
                 table: selectedTable.result,
@@ -318,7 +329,7 @@ function Pivot({
             }}
           >
             Compile
-          </CompileButton>
+          </Button>
           <BtnGroup>
             <DropdownButton onClick={toggleDropdown}>
               Advance Operation
@@ -371,6 +382,11 @@ function Pivot({
           </BtnGroup>
         </Actions>
       </Header>
+      {status.value && (
+        <Alert key={status.value} variant={status.value}>
+          {status.label}
+        </Alert>
+      )}
       <OperationWindow>
         <InputWindow>
           <TableContainer>

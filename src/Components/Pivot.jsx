@@ -117,17 +117,6 @@ const QueryName = styled.div`
   font-weight: 500;
   margin-bottom: 5px;
 `;
-const CompileButton = styled.button`
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 35px;
-`;
-
-const ClearButton = styled(CompileButton)``;
 
 const Output = styled.div`
   background: black;

@@ -6,7 +6,6 @@ import { CurrentDateFormat } from "../Constants/CommonFunctions";
 import axios from "axios";
 import { apiUrls } from "../Constants/Apidist";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 
 const csvtojson = require("csvtojson");
@@ -26,16 +25,6 @@ const TextArea = styled.textarea`
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
-`;
-
-const ClearButton = styled.button`
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 36px;
 `;
 
 const ResultContainer = styled.div`
@@ -136,7 +125,6 @@ function Compiler({
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState("");
   const [view, setView] = useState(false);
-  const [alertView, setAlertView] = useState([]);
   const [status, setStatus] = useState({});
 
   const runQuery = async ({ queryWindow, queryDate }) => {
@@ -326,25 +314,6 @@ function Compiler({
           </TableWrapper>
         </Output>
       </ResultContainer>
-
-      <Modal
-        show={alertView.length > 0}
-        onHide={() => setAlertView([])}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Alert</Modal.Title>
-        </Modal.Header>
-        {alertView.map((str) => {
-          return <Modal.Body>{str} </Modal.Body>;
-        })}
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setAlertView([])}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </CompilerContainer>
   );
 }

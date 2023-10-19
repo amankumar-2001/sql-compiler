@@ -25,6 +25,12 @@
   ![alt text](./public/Screenshots/Screenshot9.png)
   ![alt text](./public/Screenshots/Screenshot10.png)
   ![alt text](./public/Screenshots/Screenshot11.png)
+
+### Changes in version 3.0
+
+- Use Api to get the result of the query and renders print every row in output window.
+- When we compile the result can be from any table given in the github ![link](https://github.com/graphql-compose/graphql-compose-examples/blob/master/examples/northwind/data/csv/customers.csv).
+- Uses the React-Bootstrap for the UI error/success modal, buttons etc.
 - ### Dashboard
   ![alt text](./public/Screenshots/Screenshot1.png)
 - This is the dashboard which contains three main components i.e. Sidebar, Queries, and Compiler.
